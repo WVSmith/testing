@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>insertcategories</name>
+    <name>lookupinsertkeyword</name>
     <description/>
     <extended_description/>
     <trans_version/>
     <trans_type>Normal</trans_type>
-    <trans_status>0</trans_status>
     <directory>&#x2f;</directory>
     <parameters>
     </parameters>
@@ -67,10 +66,10 @@
     <clusterschemas>
     </clusterschemas>
   <created_user>-</created_user>
-  <created_date>2016&#x2f;06&#x2f;14 13&#x3a;25&#x3a;50.651</created_date>
+  <created_date>2016&#x2f;06&#x2f;28 13&#x3a;11&#x3a;48.441</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2016&#x2f;06&#x2f;14 13&#x3a;25&#x3a;50.651</modified_date>
-    <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA&#x3d;</key_for_session_key>
+  <modified_date>2016&#x2f;06&#x2f;28 13&#x3a;11&#x3a;48.441</modified_date>
+    <key_for_session_key/>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
@@ -103,9 +102,11 @@
     </attributes>
   </connection>
   <order>
-  <hop> <from>Get rows from result</from><to>Check Category</to><enabled>Y</enabled> </hop>
-  <hop> <from>Check Category</from><to>Insert New Categories</to><enabled>Y</enabled> </hop>
-  <hop> <from>CSV file input</from><to>Check Category</to><enabled>N</enabled> </hop>
+  <hop> <from>Get rows from result</from><to>Split Keywords</to><enabled>Y</enabled> </hop>
+  <hop> <from>CSV file input</from><to>Split Keywords</to><enabled>N</enabled> </hop>
+  <hop> <from>Split Keywords</from><to>Select values</to><enabled>Y</enabled> </hop>
+  <hop> <from>Select values</from><to>Filter rows</to><enabled>Y</enabled> </hop>
+  <hop> <from>Filter rows</from><to>Insert New Keywords</to><enabled>Y</enabled> </hop>
   </order>
   <step>
     <name>CSV file input</name>
@@ -399,42 +400,8 @@
     </fields>
      <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>336</xloc>
-      <yloc>384</yloc>
-      <draw>Y</draw>
-      </GUI>
-    </step>
-
-  <step>
-    <name>Check Category</name>
-    <type>IfNull</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-         <partitioning>
-           <method>none</method>
-           <schema_name/>
-           </partitioning>
-      <replaceAllByValue/>
-      <replaceAllMask/>
-      <selectFields>Y</selectFields>
-      <selectValuesType>N</selectValuesType>
-      <setEmptyStringAll>N</setEmptyStringAll>
-    <valuetypes>
-      </valuetypes>
-    <fields>
-      <field>
-        <name>category</name>
-        <value>none</value>
-        <mask/>
-        <set_empty_string>N</set_empty_string>
-        </field>
-      </fields>
-     <cluster_schema/>
- <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>496</xloc>
-      <yloc>256</yloc>
+      <xloc>192</xloc>
+      <yloc>288</yloc>
       <draw>Y</draw>
       </GUI>
     </step>
@@ -483,7 +450,7 @@
         <length>-1</length>
         <precision>-1</precision>
         </field>      <field>        <name>brand</name>
-        <type>None</type>
+        <type>String</type>
         <length>-1</length>
         <precision>-1</precision>
         </field>      <field>        <name>Color</name>
@@ -548,14 +515,64 @@
         <precision>-1</precision>
         </field>      </fields>     <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>336</xloc>
-      <yloc>256</yloc>
+      <xloc>192</xloc>
+      <yloc>160</yloc>
       <draw>Y</draw>
       </GUI>
     </step>
 
   <step>
-    <name>Insert New Categories</name>
+    <name>Split Keywords</name>
+    <type>SplitFieldToRows3</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+   <splitfield>Keywords</splitfield>
+   <delimiter>&#x3b;</delimiter>
+   <newfield>keyword</newfield>
+   <rownum>N</rownum>
+   <rownum_field/>
+   <resetrownumber>Y</resetrownumber>
+   <delimiter_is_regex>N</delimiter_is_regex>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>336</xloc>
+      <yloc>160</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>Select values</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+    <fields>      <field>        <name>keyword</name>
+        <rename/>
+        <length>-2</length>
+        <precision>-2</precision>
+      </field>        <select_unspecified>N</select_unspecified>
+    </fields>     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>480</xloc>
+      <yloc>160</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>Insert New Keywords</name>
     <type>ExecSQL</type>
     <description/>
     <distribute>Y</distribute>
@@ -570,20 +587,49 @@
     <single_statement>Y</single_statement>
     <replace_variables>Y</replace_variables>
     <quoteString>N</quoteString>
-    <sql>INSERT INTO categories &#x28;name&#x29;&#xa;SELECT &#x2a; FROM &#x28;SELECT &#x3f;&#x29; AS tmp&#xa;WHERE NOT EXISTS &#x28;&#xa;    SELECT id FROM categories WHERE name &#x3d; &#x3f;&#xa;&#x29; LIMIT 1&#x3b;</sql>
+    <sql>INSERT INTO keywords &#x28;name&#x29;&#xa;SELECT &#x2a; FROM &#x28;SELECT &#x3f;&#x29; AS tmp&#xa;WHERE NOT EXISTS &#x28;&#xa;    SELECT id FROM keywords WHERE name &#x3d; &#x3f;&#xa;&#x29; LIMIT 1&#x3b;</sql>
     <set_params>Y</set_params>
     <insert_field/>
     <update_field/>
     <delete_field/>
     <read_field/>
     <arguments>
-       <argument><name>category</name></argument>
-       <argument><name>category</name></argument>
+       <argument><name>keyword</name></argument>
+       <argument><name>keyword</name></argument>
     </arguments>
      <cluster_schema/>
  <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
-      <xloc>656</xloc>
-      <yloc>256</yloc>
+      <xloc>784</xloc>
+      <yloc>160</yloc>
+      <draw>Y</draw>
+      </GUI>
+    </step>
+
+  <step>
+    <name>Filter rows</name>
+    <type>FilterRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+         <partitioning>
+           <method>none</method>
+           <schema_name/>
+           </partitioning>
+<send_true_to>Insert New Keywords</send_true_to>
+<send_false_to/>
+    <compare>
+<condition>
+ <negated>N</negated>
+ <leftvalue>keyword</leftvalue>
+ <function>IS NOT NULL</function>
+ <rightvalue/>
+ </condition>
+    </compare>
+     <cluster_schema/>
+ <remotesteps>   <input>   </input>   <output>   </output> </remotesteps>    <GUI>
+      <xloc>624</xloc>
+      <yloc>160</yloc>
       <draw>Y</draw>
       </GUI>
     </step>
